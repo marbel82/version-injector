@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 
-namespace version_injetor
+namespace version_injector
 {
     public static class Program
     {
@@ -15,7 +15,7 @@ namespace version_injetor
 
             if (args.Length == 0)
             {
-                Console.WriteLine("version_injetor.exe (2021)");
+                Console.WriteLine("version_injector.exe (2021-2025)");
                 Console.WriteLine("    /template=<template_path>");
                 Console.WriteLine("    /output=<output_path>");
                 Console.WriteLine("");
