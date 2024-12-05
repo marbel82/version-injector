@@ -7,6 +7,7 @@ namespace version_injector
 {
     public static class Program
     {
+        const string REPL_COMMITS_COUNT = "$COMMITS_COUNT$";
         const string REPL_COMMITS_COUNT_FP = "$COMMITS_COUNT_FP$";
 
         public static int Main(string[] args)
@@ -19,7 +20,8 @@ namespace version_injector
                 Console.WriteLine("    /template=<template_path>");
                 Console.WriteLine("    /output=<output_path>");
                 Console.WriteLine("");
-                Console.WriteLine($"    {REPL_COMMITS_COUNT_FP} => commits number from @ (select first parent in merge) ");
+                Console.WriteLine($"    {REPL_COMMITS_COUNT} => commits number from @");
+                Console.WriteLine($"    {REPL_COMMITS_COUNT_FP} => commits number from @ (select first parent in merge)");
                 Console.WriteLine("");
                 Console.WriteLine("  By: marbel82");
                 return -1;
@@ -53,9 +55,16 @@ namespace version_injector
             var sb = new StringBuilder();
             sb.Append(template);
 
+            if (template.Contains(REPL_COMMITS_COUNT))
+            {
+                int fpc = ReadGitCommitsCount(false);
+
+                sb.Replace(REPL_COMMITS_COUNT, fpc.ToString());
+            }
+
             if (template.Contains(REPL_COMMITS_COUNT_FP))
             {
-                int fpc = ReadGitFirstParentCount();
+                int fpc = ReadGitCommitsCount(true);
 
                 sb.Replace(REPL_COMMITS_COUNT_FP, fpc.ToString());
             }
@@ -63,14 +72,16 @@ namespace version_injector
             return sb.ToString();
         }
 
-        public static int ReadGitFirstParentCount()
+        public static int ReadGitCommitsCount(bool firstParent)
         {
             var psi = new ProcessStartInfo("git.exe")
             {
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 RedirectStandardError = false,
-                Arguments = "rev-list --count --first-parent @",
+                Arguments = firstParent 
+                    ? "rev-list --count --first-parent @"
+                    : "rev-list --count @",
             };
 
             var p = Process.Start(psi);
