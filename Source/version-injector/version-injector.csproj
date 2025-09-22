@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>version_injetor</RootNamespace>
+    <RootNamespace>version_injector</RootNamespace>
   </PropertyGroup>
 
 </Project>
